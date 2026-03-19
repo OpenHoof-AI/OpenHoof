@@ -38,6 +38,11 @@ export const unitTestAdditionalExcludePatterns = [
   // fallback path takes 277+ seconds in CI (likely an internal timeout waiting
   // for a real gateway connection). Exclude from the low-profile fast lane.
   "src/cli/command-secret-gateway.test.ts",
+  // doc-baseline.test.ts calls buildConfigDocBaseline which loads all bundled
+  // plugin manifests and imports channel plugin modules. This consistently
+  // exceeds the 30s --testTimeout in CI's low profile lane. Exclude until CI
+  // capacity supports longer per-test timeouts.
+  "src/config/doc-baseline.test.ts",
 ];
 
 const sharedBaseExcludePatterns = [
