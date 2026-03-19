@@ -33,6 +33,11 @@ export const unitTestAdditionalExcludePatterns = [
   // paths). They consistently blow the 30 s --testTimeout in CI's low profile and
   // cause bail-3 to trigger. Exclude from the low-profile fast lane.
   "src/infra/outbound/deliver.test.ts",
+  // command-secret-gateway.test.ts has a test that internally calls
+  // resolveCommandSecretRefsLocally after the mocked callGateway throws. That
+  // fallback path takes 277+ seconds in CI (likely an internal timeout waiting
+  // for a real gateway connection). Exclude from the low-profile fast lane.
+  "src/cli/command-secret-gateway.test.ts",
 ];
 
 const sharedBaseExcludePatterns = [
