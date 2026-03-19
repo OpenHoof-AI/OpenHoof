@@ -3349,35 +3349,43 @@ module.exports = {
     ).toBe(false);
   });
 
-  it("loads source runtime shims through the non-native Jiti boundary", async () => {
-    const jiti = createJiti(import.meta.url, {
-      ...__testing.buildPluginLoaderJitiOptions(__testing.resolvePluginSdkScopedAliasMap()),
-      tryNative: false,
-    });
-    const discordChannelRuntime = path.join(
-      process.cwd(),
-      "extensions",
-      "discord",
-      "src",
-      "channel.runtime.ts",
-    );
-    const discordVoiceRuntime = path.join(
-      process.cwd(),
-      "extensions",
-      "discord",
-      "src",
-      "voice",
-      "manager.runtime.ts",
-    );
+  // This test loads real Discord extension files through jiti, which pulls in
+  // discord.js transitive deps. That makes it slow — give it extra runway so it
+  // doesn't flap under the default 30 s CI timeout. It is also excluded from the
+  // `low` CI profile via vitest.unit-paths.mjs.
+  it(
+    "loads source runtime shims through the non-native Jiti boundary",
+    async () => {
+      const jiti = createJiti(import.meta.url, {
+        ...__testing.buildPluginLoaderJitiOptions(__testing.resolvePluginSdkScopedAliasMap()),
+        tryNative: false,
+      });
+      const discordChannelRuntime = path.join(
+        process.cwd(),
+        "extensions",
+        "discord",
+        "src",
+        "channel.runtime.ts",
+      );
+      const discordVoiceRuntime = path.join(
+        process.cwd(),
+        "extensions",
+        "discord",
+        "src",
+        "voice",
+        "manager.runtime.ts",
+      );
 
-    await expect(jiti.import(discordChannelRuntime)).resolves.toMatchObject({
-      discordSetupWizard: expect.any(Object),
-    });
-    await expect(jiti.import(discordVoiceRuntime)).resolves.toMatchObject({
-      DiscordVoiceManager: expect.any(Function),
-      DiscordVoiceReadyListener: expect.any(Function),
-    });
-  });
+      await expect(jiti.import(discordChannelRuntime)).resolves.toMatchObject({
+        discordSetupWizard: expect.any(Object),
+      });
+      await expect(jiti.import(discordVoiceRuntime)).resolves.toMatchObject({
+        DiscordVoiceManager: expect.any(Function),
+        DiscordVoiceReadyListener: expect.any(Function),
+      });
+    },
+    { timeout: 60_000 },
+  );
 
   it("loads source TypeScript plugins that route through local runtime shims", () => {
     const plugin = writePlugin({
