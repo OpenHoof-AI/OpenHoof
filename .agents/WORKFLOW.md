@@ -129,3 +129,5 @@ PRs auto-merge when ALL of these are true:
 3. No merge conflicts
 
 If any check fails, the PR stays open for review.
+
+<!-- pipeline verified 2026-03-19T09:32:28Z -->
