@@ -29,6 +29,10 @@ export const unitTestAdditionalExcludePatterns = [
   // 60 s timeout, which exceeds the 30 s --testTimeout used in CI's low profile.
   // Exclude the whole file from the low-profile lane so it doesn't flap or bail CI.
   "src/plugins/loader.test.ts",
+  // deliver.test.ts contains tests that take 22+ seconds each (real network/IO
+  // paths). They consistently blow the 30 s --testTimeout in CI's low profile and
+  // cause bail-3 to trigger. Exclude from the low-profile fast lane.
+  "src/infra/outbound/deliver.test.ts",
 ];
 
 const sharedBaseExcludePatterns = [
