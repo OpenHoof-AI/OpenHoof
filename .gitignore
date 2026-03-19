@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-runtime/
+pnpm-lock.yaml
+package-lock.json
+extensions/*/node_modules/
+packages/*/node_modules/
+ui/node_modules/
+src/canvas-host/a2ui/a2ui.bundle.js
