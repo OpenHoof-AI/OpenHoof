@@ -114,6 +114,7 @@ OpenHoof supports multiple LLM providers. Use the strongest model available to y
 - **OpenAI** (GPT / Codex)
 - **Google** (Gemini)
 - **AWS Bedrock**
+- **FreedomGPT** (uncensored, no filters)
 - **Ollama** (local models)
 - And many more via extensions
 
