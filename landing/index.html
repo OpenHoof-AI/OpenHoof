@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenHoof — Uncensored AI Agents</title>
+  <meta name="description" content="OpenHoof is coming. Uncensored AI agents, no guardrails. Reclaim your freedom to build.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #050510;
+      --surface: #0c0c1e;
+      --text: #e4e6ef;
+      --text-dim: #5a5c72;
+      --accent: #3b82f6;
+      --accent-bright: #60a5fa;
+      --accent-dim: rgba(59, 130, 246, 0.1);
+      --accent-glow: rgba(59, 130, 246, 0.25);
+      --red: #ff3636;
+      --font-display: 'Instrument Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-display);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Canvas background ── */
+    #grid-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+    }
+
+    /* ── Radial glow behind hero ── */
+    .glow {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, rgba(59,130,246,0.02) 40%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+      animation: pulse-glow 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-glow {
+      0%   { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 1;   transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.75rem 2.5rem;
+      animation: fade-down 1s ease-out 0.2s both;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      filter: drop-shadow(0 0 8px rgba(59,130,246,0.5));
+    }
+
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .topbar-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+      animation: blink 2.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.2; }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 2rem 6rem;
+      gap: 1.8rem;
+    }
+
+    /* ── Hero Logo ── */
+    .hero-logo {
+      width: 140px;
+      height: 140px;
+      filter: drop-shadow(0 0 30px rgba(59,130,246,0.4)) drop-shadow(0 0 60px rgba(59,130,246,0.15));
+      animation: fade-up 1s ease-out 0.4s both, float 5s ease-in-out infinite 1.4s;
+    }
+
+    .hero-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    .hero-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      background: var(--accent-dim);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      padding: 0.45rem 1.2rem;
+      border-radius: 100px;
+      animation: fade-up 0.8s ease-out 0.5s both;
+    }
+
+    .hero-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(3.5rem, 10vw, 8.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      animation: fade-up 0.9s ease-out 0.7s both;
+      position: relative;
+    }
+
+    .hero-heading .line-2 {
+      display: block;
+      background: linear-gradient(90deg, var(--accent) 0%, #818cf8 50%, var(--accent-bright) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Glitch flicker on heading */
+    .hero-heading::after {
+      content: 'COMING';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      color: var(--accent-bright);
+      overflow: hidden;
+      clip-path: inset(0 0 0 0);
+      animation: glitch 8s linear infinite;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    @keyframes glitch {
+      0%, 94%, 100%  { opacity: 0; }
+      95%            { opacity: 0.8; clip-path: inset(20% 0 60% 0); transform: translateX(-4px); }
+      96%            { opacity: 0; }
+      97%            { opacity: 0.6; clip-path: inset(50% 0 10% 0); transform: translateX(3px); }
+      98%            { opacity: 0; }
+    }
+
+    .hero-sub {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-weight: 400;
+      color: var(--text-dim);
+      max-width: 520px;
+      line-height: 1.6;
+      animation: fade-up 0.9s ease-out 0.9s both;
+    }
+
+    .hero-sub strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* ── CTA input ── */
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 0.5rem;
+      animation: fade-up 1s ease-out 1.1s both;
+      position: relative;
+    }
+
+    .cta-input {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.9rem 1.3rem;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-right: none;
+      border-radius: 8px 0 0 8px;
+      color: var(--text);
+      outline: none;
+      width: 280px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .cta-input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .cta-input:focus {
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .cta-btn {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.6rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+      white-space: nowrap;
+    }
+
+    .cta-btn:hover {
+      background: var(--accent-bright);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
+    }
+
+    .cta-btn:active {
+      transform: translateY(0);
+    }
+
+    /* ── Terminal lines decoration ── */
+    .terminal-lines {
+      margin-top: 2.5rem;
+      animation: fade-up 1s ease-out 1.4s both;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .terminal-lines .line {
+      opacity: 0;
+      animation: type-in 0.4s ease-out forwards;
+    }
+
+    .terminal-lines .line:nth-child(1) { animation-delay: 1.8s; }
+    .terminal-lines .line:nth-child(2) { animation-delay: 2.2s; }
+    .terminal-lines .line:nth-child(3) { animation-delay: 2.6s; }
+
+    .terminal-lines .prompt {
+      color: var(--accent-bright);
+    }
+
+    .terminal-lines .flag {
+      color: var(--red);
+    }
+
+    @keyframes type-in {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 0.6; transform: translateY(0); }
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      animation: fade-up 0.8s ease-out 1.6s both;
+    }
+
+    .footer a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--accent-bright);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    /* ── Animations ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fade-down {
+      from { opacity: 0; transform: translateY(-15px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .topbar {
+        padding: 1.25rem 1.25rem;
+      }
+
+      .hero {
+        padding: 2rem 1.25rem 4rem;
+      }
+
+      .hero-logo {
+        width: 100px;
+        height: 100px;
+      }
+
+      .cta-row {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .cta-input {
+        width: 100%;
+        border-radius: 8px;
+        border-right: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .cta-btn {
+        width: 100%;
+        border-radius: 8px;
+      }
+
+      .footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="grid-canvas"></canvas>
+  <div class="glow"></div>
+
+  <div class="page">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <img src="logo.png" alt="OpenHoof">
+        </div>
+        OpenHoof
+      </a>
+      <div class="topbar-status">
+        <span class="status-dot"></span>
+        Building in progress
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <main class="hero">
+      <div class="hero-logo">
+        <img src="logo.png" alt="OpenHoof Logo">
+      </div>
+
+      <div class="hero-badge">We're not horsing around.</div>
+
+      <h1 class="hero-heading">
+        COMING
+        <span class="line-2">SOON</span>
+      </h1>
+
+      <p class="hero-sub">
+        <strong>OpenHoof</strong> — uncensored AI agents that do what you say.
+        Like OpenClaw, but with the reigns off.
+      </p>
+
+      <div class="cta-row">
+        <input type="email" class="cta-input" placeholder="you@email.com" aria-label="Email address">
+        <button class="cta-btn" onclick="handleNotify(this)">Notify Me</button>
+      </div>
+
+      <div class="terminal-lines">
+        <div class="line"><span class="prompt">$</span> OpenHoof init --agent autonomous</div>
+        <div class="line"><span class="prompt">$</span> OpenHoof deploy <span class="flag">--uncensored</span></div>
+        <div class="line"><span class="prompt">$</span> freedom loading... ██████████░░ 83%</div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Built by <span style="display:inline-block;filter:hue-rotate(200deg) saturate(2)">🐴</span> <a href="https://x.com/thekethorsepf" target="_blank" rel="noopener">thekethorsepf</a> &middot; &copy; 2026 OpenHoof. All rights unleashed.</span>
+      <div class="footer-links">
+        <a href="https://github.com/OpenHoof-AI" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/openhoof" target="_blank" rel="noopener">Twitter</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // ── Animated dot grid background ──
+    const canvas = document.getElementById('grid-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, dots = [];
+    let mouse = { x: -1000, y: -1000 };
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      initDots();
+    }
+
+    function initDots() {
+      dots = [];
+      const spacing = 40;
+      for (let x = spacing; x < w; x += spacing) {
+        for (let y = spacing; y < h; y += spacing) {
+          dots.push({ x, y, ox: x, oy: y, r: 1 });
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+
+      for (const dot of dots) {
+        const dx = mouse.x - dot.ox;
+        const dy = mouse.y - dot.oy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = 180;
+
+        if (dist < maxDist) {
+          const force = (1 - dist / maxDist) * 12;
+          dot.x = dot.ox - (dx / dist) * force;
+          dot.y = dot.oy - (dy / dist) * force;
+          dot.r = 1 + (1 - dist / maxDist) * 2;
+        } else {
+          dot.x += (dot.ox - dot.x) * 0.1;
+          dot.y += (dot.oy - dot.y) * 0.1;
+          dot.r += (1 - dot.r) * 0.1;
+        }
+
+        const alpha = dist < maxDist ? 0.15 + (1 - dist / maxDist) * 0.6 : 0.12;
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+        ctx.fillStyle = dist < maxDist
+          ? `rgba(59,130,246,${alpha})`
+          : `rgba(255,255,255,${alpha})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    resize();
+    draw();
+
+    // ── Notify button ──
+    function handleNotify(btn) {
+      const input = document.querySelector('.cta-input');
+      const email = input.value.trim();
+      if (!email || !email.includes('@')) {
+        input.style.borderColor = 'var(--red)';
+        setTimeout(() => input.style.borderColor = '', 1500);
+        return;
+      }
+      btn.textContent = '✓ NOTED';
+      btn.style.background = 'var(--text-dim)';
+      btn.style.pointerEvents = 'none';
+      input.disabled = true;
+      input.style.opacity = '0.5';
+    }
+  </script>
+
+</body>
+</html>

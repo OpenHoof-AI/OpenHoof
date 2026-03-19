@@ -1,7 +1,7 @@
 # 🐴 OpenHoof — Uncensored Personal AI Agent
 
 <p align="center">
-    <img src="https://github.com/OpenHoof-AI/OpenHoof/blob/main/OpenHoof.png?raw=true" alt="OpenHoof" width="200">
+    <img src="https://github.com/OpenHoof-AI/OpenHoof/blob/main/OpenHoof%20NoBk.png?raw=true" alt="OpenHoof" width="200">
 </p>
 
 <p align="center">
