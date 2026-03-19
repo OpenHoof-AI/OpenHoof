@@ -14,6 +14,7 @@ jobs:
   build-and-test:
     name: Build & Test
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -53,4 +54,5 @@ jobs:
         run: pnpm tsgo || true
 
       - name: Test
-        run: pnpm test:fast
+        timeout-minutes: 10
+        run: OPENHOOF_TEST_PROFILE=low pnpm test:fast --reporter=verbose --bail 3
