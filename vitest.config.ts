@@ -9,6 +9,12 @@ const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 const isWindows = process.platform === "win32";
 const localWorkers = Math.max(4, Math.min(16, os.cpus().length));
 const ciWorkers = isWindows ? 2 : 3;
+// On CI (Node 22), vmForks reuses the worker process VM context across test files,
+// avoiding the ~1-1.5s Node.js startup overhead per file that `pool=forks` pays.
+// With 1000+ unit test files and 3 workers, fork overhead alone costs ~7 minutes.
+// vmForks is stable on Node <=24. Node 25+ falls back to forks (validated separately).
+const nodeMajor = Number.parseInt(process.versions.node.split(".")[0] ?? "", 10);
+const useVmForks = isCI && !isWindows && (Number.isNaN(nodeMajor) || nodeMajor <= 24);
 export default defineConfig({
   resolve: {
     // Keep this ordered: the base `openhoof/plugin-sdk` alias is a prefix match.
@@ -31,7 +37,7 @@ export default defineConfig({
     unstubEnvs: true,
     // Same rationale as unstubEnvs: avoid cross-test pollution under vmForks.
     unstubGlobals: true,
-    pool: "forks",
+    pool: useVmForks ? "vmForks" : "forks",
     maxWorkers: isCI ? ciWorkers : localWorkers,
     include: [
       "src/**/*.test.ts",
