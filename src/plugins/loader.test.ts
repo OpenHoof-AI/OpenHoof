@@ -3351,7 +3351,7 @@ module.exports = {
 
   it("loads source runtime shims through the non-native Jiti boundary", async () => {
     const jiti = createJiti(import.meta.url, {
-      ...__testing.buildPluginLoaderJitiOptions({}),
+      ...__testing.buildPluginLoaderJitiOptions(__testing.resolvePluginSdkScopedAliasMap()),
       tryNative: false,
     });
     const discordChannelRuntime = path.join(
