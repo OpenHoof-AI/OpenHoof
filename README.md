@@ -1,7 +1,7 @@
 # 🐴 OpenHoof — Uncensored Personal AI Agent
 
 <p align="center">
-    <img src="openhoof-main/apps/shared/openhoof-logo.png" alt="OpenHoof" width="200">
+    <img src="https://github.com/OpenHoof-AI/OpenHoof/blob/main/OpenHoof.png?raw=true" alt="OpenHoof" width="200">
 </p>
 
 <p align="center">
@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/OpenHoof-AI/openhoof/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/OpenHoof-AI/openhoof/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
-  <a href="https://github.com/OpenHoof-AI/openhoof/releases"><img src="https://img.shields.io/github/v/release/OpenHoof-AI/openhoof?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
+  <a href="https://github.com/OpenHoof-AI/OpenHoof/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/OpenHoof-AI/OpenHoof/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
+  <a href="https://github.com/OpenHoof-AI/OpenHoof/releases"><img src="https://img.shields.io/github/v/release/OpenHoof-AI/OpenHoof?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
@@ -104,30 +104,7 @@ WhatsApp / Telegram / Slack / Discord / Signal / iMessage / IRC / Teams / Matrix
 
 All channels supported out of the box:
 
-| Channel | Status |
-|---------|--------|
-| WhatsApp (Baileys) | ✅ |
-| Telegram (grammY) | ✅ |
-| Slack (Bolt) | ✅ |
-| Discord (discord.js) | ✅ |
-| Google Chat | ✅ |
-| Signal (signal-cli) | ✅ |
-| BlueBubbles (iMessage) | ✅ |
-| iMessage (legacy) | ✅ |
-| IRC | ✅ |
-| Microsoft Teams | ✅ |
-| Matrix | ✅ |
-| Feishu | ✅ |
-| LINE | ✅ |
-| Mattermost | ✅ |
-| Nextcloud Talk | ✅ |
-| Nostr | ✅ |
-| Synology Chat | ✅ |
-| Tlon | ✅ |
-| Twitch | ✅ |
-| Zalo | ✅ |
-| Zalo Personal | ✅ |
-| WebChat | ✅ |
+WhatsApp (Baileys) · Telegram (grammY) · Slack (Bolt) · Discord (discord.js) · Google Chat · Signal (signal-cli) · BlueBubbles (iMessage) · iMessage (legacy) · IRC · Microsoft Teams · Matrix · Feishu · LINE · Mattermost · Nextcloud Talk · Nostr · Synology Chat · Tlon · Twitch · Zalo · Zalo Personal · WebChat
 
 ## Models
 
