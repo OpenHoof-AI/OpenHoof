@@ -45,7 +45,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build
-        run: OPENHOOF_A2UI_SKIP_MISSING=1 pnpm build:docker
+        run: OPENHOOF_A2UI_SKIP_MISSING=1 pnpm build:docker && pnpm build:plugin-sdk:dts
 
       - name: Lint
         run: pnpm lint
