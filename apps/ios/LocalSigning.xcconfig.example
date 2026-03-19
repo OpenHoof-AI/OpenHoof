@@ -1,0 +1,15 @@
+// Copy to LocalSigning.xcconfig for personal local signing overrides.
+// This file is only an example and should stay committed.
+
+OPENHOOF_CODE_SIGN_STYLE = Automatic
+OPENHOOF_DEVELOPMENT_TEAM = YOUR_TEAM_ID
+
+OPENHOOF_APP_BUNDLE_ID = ai.openhoof.client
+OPENHOOF_SHARE_BUNDLE_ID = ai.openhoof.client.share
+OPENHOOF_ACTIVITY_WIDGET_BUNDLE_ID = ai.openhoof.client.activitywidget
+OPENHOOF_WATCH_APP_BUNDLE_ID = ai.openhoof.client.watchkitapp
+OPENHOOF_WATCH_EXTENSION_BUNDLE_ID = ai.openhoof.client.watchkitapp.extension
+
+// Leave empty with automatic signing.
+OPENHOOF_APP_PROFILE =
+OPENHOOF_SHARE_PROFILE =

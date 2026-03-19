@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/opencode-go-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof OpenCode Go provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

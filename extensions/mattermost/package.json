@@ -1,0 +1,30 @@
+{
+  "name": "@openhoof/mattermost",
+  "version": "2026.3.14",
+  "description": "OpenHoof Mattermost channel plugin",
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.19.0",
+    "zod": "^4.3.6"
+  },
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "mattermost",
+      "label": "Mattermost",
+      "selectionLabel": "Mattermost (plugin)",
+      "docsPath": "/channels/mattermost",
+      "docsLabel": "mattermost",
+      "blurb": "self-hosted Slack-style chat; install the plugin to enable.",
+      "order": 65
+    },
+    "install": {
+      "npmSpec": "@openhoof/mattermost",
+      "localPath": "extensions/mattermost",
+      "defaultChoice": "npm"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/venice-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Venice provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

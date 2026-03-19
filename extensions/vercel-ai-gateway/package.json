@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/vercel-ai-gateway-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Vercel AI Gateway provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

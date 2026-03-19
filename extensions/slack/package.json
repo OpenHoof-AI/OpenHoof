@@ -1,0 +1,13 @@
+{
+  "name": "@openhoof/slack",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Slack channel plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts"
+  }
+}

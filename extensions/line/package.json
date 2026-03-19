@@ -1,0 +1,28 @@
+{
+  "name": "@openhoof/line",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof LINE channel plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "line",
+      "label": "LINE",
+      "selectionLabel": "LINE (Messaging API)",
+      "docsPath": "/channels/line",
+      "docsLabel": "line",
+      "blurb": "LINE Messaging API bot for Japan/Taiwan/Thailand markets.",
+      "order": 75,
+      "quickstartAllowFrom": true
+    },
+    "install": {
+      "npmSpec": "@openhoof/line",
+      "localPath": "extensions/line",
+      "defaultChoice": "npm"
+    }
+  }
+}

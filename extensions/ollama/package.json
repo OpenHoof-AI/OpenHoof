@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/ollama-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Ollama provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

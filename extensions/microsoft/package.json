@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/microsoft-speech",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Microsoft speech plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

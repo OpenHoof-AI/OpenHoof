@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/qianfan-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Qianfan provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

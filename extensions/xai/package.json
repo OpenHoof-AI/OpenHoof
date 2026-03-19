@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/xai-plugin",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof xAI plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

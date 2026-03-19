@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/volcengine-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Volcengine provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

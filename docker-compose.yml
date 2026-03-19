@@ -1,0 +1,78 @@
+services:
+  openhoof-gateway:
+    image: ${OPENHOOF_IMAGE:-openhoof:local}
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      OPENHOOF_GATEWAY_TOKEN: ${OPENHOOF_GATEWAY_TOKEN:-}
+      OPENHOOF_ALLOW_INSECURE_PRIVATE_WS: ${OPENHOOF_ALLOW_INSECURE_PRIVATE_WS:-}
+      CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY:-}
+      CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
+      CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
+      TZ: ${OPENHOOF_TZ:-UTC}
+    volumes:
+      - ${OPENHOOF_CONFIG_DIR}:/home/node/.openhoof
+      - ${OPENHOOF_WORKSPACE_DIR}:/home/node/.openhoof/workspace
+      ## Uncomment the lines below to enable sandbox isolation
+      ## (agents.defaults.sandbox). Requires Docker CLI in the image
+      ## (build with --build-arg OPENHOOF_INSTALL_DOCKER_CLI=1) or use
+      ## docker-setup.sh with OPENHOOF_SANDBOX=1 for automated setup.
+      ## Set DOCKER_GID to the host's docker group GID (run: stat -c '%g' /var/run/docker.sock).
+      # - /var/run/docker.sock:/var/run/docker.sock
+    # group_add:
+    #   - "${DOCKER_GID:-999}"
+    ports:
+      - "${OPENHOOF_GATEWAY_PORT:-18789}:18789"
+      - "${OPENHOOF_BRIDGE_PORT:-18790}:18790"
+    init: true
+    restart: unless-stopped
+    command:
+      [
+        "node",
+        "dist/index.js",
+        "gateway",
+        "--bind",
+        "${OPENHOOF_GATEWAY_BIND:-lan}",
+        "--port",
+        "18789",
+      ]
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:18789/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  openhoof-cli:
+    image: ${OPENHOOF_IMAGE:-openhoof:local}
+    network_mode: "service:openhoof-gateway"
+    cap_drop:
+      - NET_RAW
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      OPENHOOF_GATEWAY_TOKEN: ${OPENHOOF_GATEWAY_TOKEN:-}
+      OPENHOOF_ALLOW_INSECURE_PRIVATE_WS: ${OPENHOOF_ALLOW_INSECURE_PRIVATE_WS:-}
+      BROWSER: echo
+      CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY:-}
+      CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
+      CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
+      TZ: ${OPENHOOF_TZ:-UTC}
+    volumes:
+      - ${OPENHOOF_CONFIG_DIR}:/home/node/.openhoof
+      - ${OPENHOOF_WORKSPACE_DIR}:/home/node/.openhoof/workspace
+    stdin_open: true
+    tty: true
+    init: true
+    entrypoint: ["node", "dist/index.js"]
+    depends_on:
+      - openhoof-gateway

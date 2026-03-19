@@ -1,0 +1,339 @@
+name: OpenHoof
+options:
+  bundleIdPrefix: ai.openhoof
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+
+packages:
+  OpenHoofKit:
+    path: ../shared/OpenHoofKit
+  Swabble:
+    path: ../../Swabble
+
+schemes:
+  OpenHoof:
+    shared: true
+    build:
+      targets:
+        OpenHoof: all
+    test:
+      targets:
+        - OpenHoofTests
+        - OpenHoofLogicTests
+  OpenHoofLogicTests:
+    shared: true
+    build:
+      targets:
+        OpenHoofLogicTests: all
+    test:
+      targets:
+        - OpenHoofLogicTests
+
+targets:
+  OpenHoof:
+    type: application
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: Sources
+    dependencies:
+      - target: OpenHoofShareExtension
+        embed: true
+      - target: OpenHoofActivityWidget
+        embed: true
+      - target: OpenHoofWatchApp
+      - package: OpenHoofKit
+      - package: OpenHoofKit
+        product: OpenHoofChatUI
+      - package: OpenHoofKit
+        product: OpenHoofProtocol
+      - package: Swabble
+        product: SwabbleKit
+      - sdk: AppIntents.framework
+    preBuildScripts:
+      - name: SwiftFormat (lint)
+        basedOnDependencyAnalysis: false
+        inputFileLists:
+          - $(SRCROOT)/SwiftSources.input.xcfilelist
+        script: |
+          set -euo pipefail
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          if ! command -v swiftformat >/dev/null 2>&1; then
+            echo "error: swiftformat not found (brew install swiftformat)" >&2
+            exit 1
+          fi
+          swiftformat --lint --config "$SRCROOT/../../.swiftformat" \
+            --filelist "$SRCROOT/SwiftSources.input.xcfilelist"
+      - name: SwiftLint
+        basedOnDependencyAnalysis: false
+        inputFileLists:
+          - $(SRCROOT)/SwiftSources.input.xcfilelist
+        script: |
+          set -euo pipefail
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          if ! command -v swiftlint >/dev/null 2>&1; then
+            echo "error: swiftlint not found (brew install swiftlint)" >&2
+            exit 1
+          fi
+          swiftlint lint --config "$SRCROOT/.swiftlint.yml" --use-script-input-file-lists
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_ENTITLEMENTS: Sources/OpenHoof.entitlements
+        CODE_SIGN_STYLE: "$(OPENHOOF_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(OPENHOOF_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENHOOF_APP_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(OPENHOOF_APP_PROFILE)"
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        SUPPORTS_LIVE_ACTIVITIES: YES
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+      configs:
+        Debug:
+          OPENHOOF_PUSH_TRANSPORT: direct
+          OPENHOOF_PUSH_DISTRIBUTION: local
+          OPENHOOF_PUSH_RELAY_BASE_URL: ""
+          OPENHOOF_PUSH_APNS_ENVIRONMENT: sandbox
+        Release:
+          OPENHOOF_PUSH_TRANSPORT: direct
+          OPENHOOF_PUSH_DISTRIBUTION: local
+          OPENHOOF_PUSH_RELAY_BASE_URL: ""
+          OPENHOOF_PUSH_APNS_ENVIRONMENT: production
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: OpenHoof
+        CFBundleIconName: AppIcon
+        CFBundleURLTypes:
+          - CFBundleURLName: ai.openhoof.ios
+            CFBundleURLSchemes:
+              - openhoof
+        CFBundleShortVersionString: "$(OPENHOOF_MARKETING_VERSION)"
+        CFBundleVersion: "$(OPENHOOF_BUILD_VERSION)"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIBackgroundModes:
+          - audio
+          - remote-notification
+        BGTaskSchedulerPermittedIdentifiers:
+          - ai.openhoof.ios.bgrefresh
+        NSLocalNetworkUsageDescription: OpenHoof discovers and connects to your OpenHoof gateway on the local network.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoadsInWebContent: true
+        NSBonjourServices:
+          - _openhoof-gw._tcp
+        NSCameraUsageDescription: OpenHoof can capture photos or short video clips when requested via the gateway.
+        NSLocationWhenInUseUsageDescription: OpenHoof uses your location when you allow location sharing.
+        NSLocationAlwaysAndWhenInUseUsageDescription: OpenHoof can share your location in the background when you enable Always.
+        NSMicrophoneUsageDescription: OpenHoof needs microphone access for voice wake.
+        NSMotionUsageDescription: OpenHoof may use motion data to support device-aware interactions and automations.
+        NSPhotoLibraryUsageDescription: OpenHoof needs photo library access when you choose existing photos to share with your assistant.
+        NSSpeechRecognitionUsageDescription: OpenHoof uses on-device speech recognition for voice wake.
+        NSSupportsLiveActivities: true
+        ITSAppUsesNonExemptEncryption: false
+        OpenHoofPushTransport: "$(OPENHOOF_PUSH_TRANSPORT)"
+        OpenHoofPushDistribution: "$(OPENHOOF_PUSH_DISTRIBUTION)"
+        OpenHoofPushRelayBaseURL: "$(OPENHOOF_PUSH_RELAY_BASE_URL)"
+        OpenHoofPushAPNsEnvironment: "$(OPENHOOF_PUSH_APNS_ENVIRONMENT)"
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+
+  OpenHoofShareExtension:
+    type: app-extension
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: ShareExtension
+    dependencies:
+      - package: OpenHoofKit
+      - sdk: AppIntents.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(OPENHOOF_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(OPENHOOF_DEVELOPMENT_TEAM)"
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENHOOF_SHARE_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(OPENHOOF_SHARE_PROFILE)"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+    info:
+      path: ShareExtension/Info.plist
+      properties:
+        CFBundleDisplayName: OpenHoof Share
+        CFBundleShortVersionString: "$(OPENHOOF_MARKETING_VERSION)"
+        CFBundleVersion: "$(OPENHOOF_BUILD_VERSION)"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: "$(PRODUCT_MODULE_NAME).ShareViewController"
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsText: true
+              NSExtensionActivationSupportsWebURLWithMaxCount: 1
+              NSExtensionActivationSupportsImageWithMaxCount: 10
+              NSExtensionActivationSupportsMovieWithMaxCount: 1
+
+  OpenHoofActivityWidget:
+    type: app-extension
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: ActivityWidget
+      - path: Sources/LiveActivity/OpenHoofActivityAttributes.swift
+    dependencies:
+      - sdk: WidgetKit.framework
+      - sdk: ActivityKit.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(OPENHOOF_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(OPENHOOF_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENHOOF_ACTIVITY_WIDGET_BUNDLE_ID)"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        SUPPORTS_LIVE_ACTIVITIES: YES
+    info:
+      path: ActivityWidget/Info.plist
+      properties:
+        CFBundleDisplayName: OpenHoof Activity
+        CFBundleShortVersionString: "$(OPENHOOF_MARKETING_VERSION)"
+        CFBundleVersion: "$(OPENHOOF_BUILD_VERSION)"
+        NSSupportsLiveActivities: true
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+  OpenHoofWatchApp:
+    type: application.watchapp2
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: WatchApp
+    dependencies:
+      - target: OpenHoofWatchExtension
+    configFiles:
+      Debug: Config/Signing.xcconfig
+      Release: Config/Signing.xcconfig
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENHOOF_WATCH_APP_BUNDLE_ID)"
+    info:
+      path: WatchApp/Info.plist
+      properties:
+        CFBundleDisplayName: OpenHoof
+        CFBundleShortVersionString: "$(OPENHOOF_MARKETING_VERSION)"
+        CFBundleVersion: "$(OPENHOOF_BUILD_VERSION)"
+        WKCompanionAppBundleIdentifier: "$(OPENHOOF_APP_BUNDLE_ID)"
+        WKWatchKitApp: true
+
+  OpenHoofWatchExtension:
+    type: watchkit2-extension
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: WatchExtension/Sources
+    dependencies:
+      - sdk: AppIntents.framework
+      - sdk: WatchConnectivity.framework
+      - sdk: UserNotifications.framework
+    configFiles:
+      Debug: Config/Signing.xcconfig
+      Release: Config/Signing.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENHOOF_WATCH_EXTENSION_BUNDLE_ID)"
+    info:
+      path: WatchExtension/Info.plist
+      properties:
+        CFBundleDisplayName: OpenHoof
+        CFBundleShortVersionString: "$(OPENHOOF_MARKETING_VERSION)"
+        CFBundleVersion: "$(OPENHOOF_BUILD_VERSION)"
+        NSExtension:
+          NSExtensionAttributes:
+            WKAppBundleIdentifier: "$(OPENHOOF_WATCH_APP_BUNDLE_ID)"
+          NSExtensionPointIdentifier: com.apple.watchkit
+
+  OpenHoofTests:
+    type: bundle.unit-test
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: Tests
+        excludes:
+          - Logic
+    dependencies:
+      - target: OpenHoof
+      - package: Swabble
+        product: SwabbleKit
+      - sdk: AppIntents.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(OPENHOOF_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(OPENHOOF_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.openhoof.ios.tests
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/OpenHoof.app/OpenHoof"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    info:
+      path: Tests/Info.plist
+      properties:
+        CFBundleDisplayName: OpenHoofTests
+        CFBundleShortVersionString: "$(OPENHOOF_MARKETING_VERSION)"
+        CFBundleVersion: "$(OPENHOOF_BUILD_VERSION)"
+
+  OpenHoofLogicTests:
+    type: bundle.unit-test
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: Tests/Logic
+    dependencies:
+      - package: OpenHoofKit
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(OPENHOOF_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(OPENHOOF_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.openhoof.ios.logic-tests
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+    info:
+      path: Tests/Info.plist
+      properties:
+        CFBundleDisplayName: OpenHoofLogicTests
+        CFBundleShortVersionString: "$(OPENHOOF_MARKETING_VERSION)"
+        CFBundleVersion: "$(OPENHOOF_BUILD_VERSION)"

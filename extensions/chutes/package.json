@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/chutes-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Chutes.ai provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

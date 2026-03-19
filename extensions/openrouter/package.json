@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/openrouter-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof OpenRouter provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

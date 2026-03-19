@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/byteplus-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof BytePlus provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

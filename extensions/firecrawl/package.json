@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/firecrawl-plugin",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Firecrawl plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

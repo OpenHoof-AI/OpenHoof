@@ -1,0 +1,20 @@
+{
+  "name": "@openhoof/memory-core",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof core memory search plugin",
+  "type": "module",
+  "peerDependencies": {
+    "openhoof": ">=2026.3.11"
+  },
+  "peerDependenciesMeta": {
+    "openhoof": {
+      "optional": true
+    }
+  },
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

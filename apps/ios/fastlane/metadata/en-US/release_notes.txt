@@ -1,0 +1,1 @@
+First App Store release of OpenHoof for iPhone. Pair with your OpenHoof Gateway to use chat, voice, sharing, and device actions from iOS.

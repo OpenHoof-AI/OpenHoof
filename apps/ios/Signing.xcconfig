@@ -1,0 +1,22 @@
+// Default signing values for shared/repo builds.
+// Auto-selected local team overrides live in .local-signing.xcconfig (git-ignored).
+// Manual local overrides can go in LocalSigning.xcconfig (git-ignored).
+
+#include "Config/Version.xcconfig"
+
+OPENHOOF_CODE_SIGN_STYLE = Manual
+OPENHOOF_DEVELOPMENT_TEAM = Y5PE65HELJ
+
+OPENHOOF_APP_BUNDLE_ID = ai.openhoof.client
+OPENHOOF_SHARE_BUNDLE_ID = ai.openhoof.client.share
+OPENHOOF_WATCH_APP_BUNDLE_ID = ai.openhoof.client.watchkitapp
+OPENHOOF_WATCH_EXTENSION_BUNDLE_ID = ai.openhoof.client.watchkitapp.extension
+OPENHOOF_ACTIVITY_WIDGET_BUNDLE_ID = ai.openhoof.client.activitywidget
+
+OPENHOOF_APP_PROFILE = ai.openhoof.client Development
+OPENHOOF_SHARE_PROFILE = ai.openhoof.client.share Development
+
+// Keep local includes after defaults: xcconfig is evaluated top-to-bottom,
+// so later assignments in local files override the defaults above.
+#include? ".local-signing.xcconfig"
+#include? "LocalSigning.xcconfig"

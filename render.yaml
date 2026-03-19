@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: openhoof
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: SETUP_PASSWORD
+        sync: false
+      - key: OPENHOOF_STATE_DIR
+        value: /data/.openhoof
+      - key: OPENHOOF_WORKSPACE_DIR
+        value: /data/workspace
+      - key: OPENHOOF_GATEWAY_TOKEN
+        generateValue: true
+    disk:
+      name: openhoof-data
+      mountPath: /data
+      sizeGB: 1

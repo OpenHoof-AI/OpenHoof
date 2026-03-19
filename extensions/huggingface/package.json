@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/huggingface-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Hugging Face provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

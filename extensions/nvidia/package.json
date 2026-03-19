@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/nvidia-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof NVIDIA provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

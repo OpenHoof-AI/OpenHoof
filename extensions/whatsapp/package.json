@@ -1,0 +1,13 @@
+{
+  "name": "@openhoof/whatsapp",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof WhatsApp channel plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts"
+  }
+}

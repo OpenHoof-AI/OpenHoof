@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/openai-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof OpenAI provider plugins",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

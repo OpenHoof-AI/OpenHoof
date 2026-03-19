@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/moonshot-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Moonshot provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@openhoof/telegram",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Telegram channel plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts"
+  }
+}

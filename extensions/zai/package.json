@@ -1,0 +1,12 @@
+{
+  "name": "@openhoof/zai-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "OpenHoof Z.AI provider plugin",
+  "type": "module",
+  "openhoof": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

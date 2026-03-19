@@ -1,0 +1,16 @@
+{
+  "name": "hoofbot",
+  "version": "2026.2.12",
+  "description": "Compatibility shim that forwards to openhoof",
+  "bin": {
+    "hoofbot": "./bin/hoofbot.js"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./cli-entry": "./bin/hoofbot.js"
+  },
+  "dependencies": {
+    "openhoof": "workspace:*"
+  }
+}
