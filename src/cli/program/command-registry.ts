@@ -229,6 +229,19 @@ const coreEntries: CoreCliEntry[] = [
       mod.registerBrowserCli(program);
     },
   },
+  {
+    commands: [
+      {
+        name: "wallet",
+        description: "Show Solana wallet balance and link to Solscan",
+        hasSubcommands: false,
+      },
+    ],
+    register: async ({ program }) => {
+      const mod = await import("./register.wallet.js");
+      mod.registerWalletCommand(program);
+    },
+  },
 ];
 
 export function getCoreCliCommandNames(): string[] {
