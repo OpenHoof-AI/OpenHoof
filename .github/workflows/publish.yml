@@ -41,9 +41,9 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build
-        run: OPENHOOF_A2UI_SKIP_MISSING=1 pnpm build:docker && pnpm build:plugin-sdk:dts && pnpm plugin-sdk:sync-exports
+        run: OPENHOOF_A2UI_SKIP_MISSING=1 pnpm build:docker && pnpm build:plugin-sdk:dts && pnpm plugin-sdk:sync-exports && pnpm ui:build
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: npm publish --access public --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
