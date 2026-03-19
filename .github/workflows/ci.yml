@@ -55,4 +55,4 @@ jobs:
 
       - name: Test
         timeout-minutes: 20
-        run: OPENHOOF_TEST_PROFILE=low pnpm test:fast --reporter=verbose --bail 3 --testTimeout 30000 --forceExit
+        run: OPENHOOF_TEST_PROFILE=low pnpm test:fast --reporter=verbose --bail 3 --testTimeout 30000
