@@ -374,7 +374,9 @@ describe("tts", () => {
       messages: { tts: {} },
     };
 
-    beforeEach(async () => {
+    beforeAll(async () => {
+      // Load modules once for the entire describe block — avoids repeated vi.resetModules()
+      // + dynamic import() per test which was the source of 500-800 ms overhead per test.
       vi.resetModules();
       ({ completeSimple: completeSimpleForTest } = await import("@mariozechner/pi-ai"));
       ({ getApiKeyForModel: getApiKeyForModelForTest } = await import("../agents/model-auth.js"));
@@ -385,6 +387,11 @@ describe("tts", () => {
       const ttsModule = await import("./tts.js");
       summarizeTextForTest = ttsModule._test.summarizeText;
       resolveTtsConfigForTest = ttsModule.resolveTtsConfig;
+    });
+
+    beforeEach(() => {
+      // Reset mock call history between tests without reloading modules.
+      vi.clearAllMocks();
       vi.mocked(completeSimpleForTest).mockResolvedValue(
         mockAssistantMessage([{ type: "text", text: "Summary" }]),
       );
