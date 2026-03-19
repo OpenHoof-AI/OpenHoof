@@ -1,0 +1,27 @@
+{
+  "id": "freedomgpt",
+  "providers": ["freedomgpt"],
+  "providerAuthEnvVars": {
+    "freedomgpt": ["FREEDOMGPT_API_KEY"]
+  },
+  "providerAuthChoices": [
+    {
+      "provider": "freedomgpt",
+      "method": "api-key",
+      "choiceId": "freedomgpt-api-key",
+      "choiceLabel": "FreedomGPT API key",
+      "groupId": "freedomgpt",
+      "groupLabel": "FreedomGPT (Uncensored)",
+      "groupHint": "Uncensored AI models",
+      "optionKey": "freedomgptApiKey",
+      "cliFlag": "--freedomgpt-api-key",
+      "cliOption": "--freedomgpt-api-key <key>",
+      "cliDescription": "FreedomGPT API key"
+    }
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

@@ -8,6 +8,7 @@ import copilotProxyPlugin from "../../../extensions/copilot-proxy/index.js";
 import elevenLabsPlugin from "../../../extensions/elevenlabs/index.js";
 import falPlugin from "../../../extensions/fal/index.js";
 import firecrawlPlugin from "../../../extensions/firecrawl/index.js";
+import freedomgptPlugin from "../../../extensions/freedomgpt/index.js";
 import githubCopilotPlugin from "../../../extensions/github-copilot/index.js";
 import googlePlugin from "../../../extensions/google/index.js";
 import huggingFacePlugin from "../../../extensions/huggingface/index.js";
@@ -361,6 +362,7 @@ const bundledProviderPlugins = dedupePlugins([
   copilotProxyPlugin,
   githubCopilotPlugin,
   falPlugin,
+  freedomgptPlugin,
   googlePlugin,
   huggingFacePlugin,
   kilocodePlugin,
