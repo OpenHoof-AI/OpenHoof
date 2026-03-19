@@ -19,6 +19,11 @@ export const unitTestAdditionalExcludePatterns = [
   "src/agents/**",
   "src/auto-reply/**",
   "src/commands/**",
+  // tts/tts.test.ts runs summarizeText tests that use vi.resetModules() + dynamic
+  // import per-test. Even fully mocked, each test incurs ~500-800ms of module
+  // reload overhead (5 tests × ~650ms ≈ 3-4s). Exclude from the low-profile fast
+  // lane to prevent it from contributing to CI timeout.
+  "src/tts/tts.test.ts",
 ];
 
 const sharedBaseExcludePatterns = [
