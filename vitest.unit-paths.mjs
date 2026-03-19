@@ -24,6 +24,11 @@ export const unitTestAdditionalExcludePatterns = [
   // reload overhead (5 tests × ~650ms ≈ 3-4s). Exclude from the low-profile fast
   // lane to prevent it from contributing to CI timeout.
   "src/tts/tts.test.ts",
+  // loader.test.ts includes a test that loads real Discord extension files through
+  // jiti (pulling in discord.js transitive deps). That single test has an explicit
+  // 60 s timeout, which exceeds the 30 s --testTimeout used in CI's low profile.
+  // Exclude the whole file from the low-profile lane so it doesn't flap or bail CI.
+  "src/plugins/loader.test.ts",
 ];
 
 const sharedBaseExcludePatterns = [
