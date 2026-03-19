@@ -53,16 +53,8 @@ jobs:
       - name: Type check
         run: pnpm tsgo || true
 
-      # Run only critical test paths - full suite (1968 files) exceeds CI time budget.
-      # Excludes: doc-baseline (slow determinism check), loader (heavy jiti/discord deps)
+      # Low-profile lane: unit tests with slow/hanging files excluded via
+      # unitTestAdditionalExcludePatterns in vitest.unit-paths.mjs.
       - name: Test
-        timeout-minutes: 10
-        run: >
-          OPENHOOF_TEST_PROFILE=low pnpm test:fast
-          --reporter=verbose --bail 3 --testTimeout 30000
-          src/config
-          src/plugins/install.test.ts
-          src/cron
-          src/context-engine
-          --exclude src/config/doc-baseline.test.ts
-          --exclude src/plugins/loader.test.ts
+        timeout-minutes: 20
+        run: OPENHOOF_TEST_PROFILE=low pnpm test:fast --reporter=verbose --bail 3 --testTimeout 30000
