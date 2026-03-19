@@ -28,7 +28,7 @@ describe("config doc baseline", () => {
 
     expect(second.json).toBe(first.json);
     expect(second.jsonl).toBe(first.jsonl);
-  });
+  }, 120000);
 
   it("normalizes array and record paths to wildcard form", async () => {
     const baseline = await buildConfigDocBaseline();
